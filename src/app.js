@@ -1,34 +1,23 @@
 import express from "express";
 import cors from "cors";
+import apiRoutes from "./routes/index.js";
+import notFoundMiddleware from "./middlewares/not-found.middleware.js";
 
 const app = express();
+const apiPrefix = process.env.API_PREFIX || "/api/v1";
 
 app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:5173" }));
 app.use(express.json());
 
-const apiPrefix = process.env.API_PREFIX || "/api/v1";
-
 app.get("/", (_req, res) => {
   res.status(200).json({
     success: true,
+    data: { service: "bahia-fix-api" },
     message: "Bahía Fix API está funcionando."
   });
 });
 
-app.get(`${apiPrefix}/health`, (_req, res) => {
-  res.status(200).json({
-    success: true,
-    data: { status: "ok", service: "bahia-fix-api" },
-    message: "API disponible."
-  });
-});
-
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    data: null,
-    message: `Ruta no encontrada: ${req.method} ${req.originalUrl}`
-  });
-});
+app.use(apiPrefix, apiRoutes);
+app.use(notFoundMiddleware);
 
 export default app;
