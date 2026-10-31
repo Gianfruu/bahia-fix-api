@@ -1,3 +1,4 @@
+
 export const clientes = [
   { id: 1, nombre: "Martín", apellido: "Gómez", telefono: "291 455-1020", email: "martin.gomez@example.com", localidad: "Bahía Blanca" },
   { id: 2, nombre: "Lucía", apellido: "Fernández", telefono: "291 488-7641", email: "lucia.fernandez@example.com", localidad: "Punta Alta" },
@@ -16,9 +17,15 @@ export const equipos = [
 
 export function filterAndPaginate(records, query, page, limit) {
   const normalizedQuery = String(query || "").trim().toLocaleLowerCase("es");
+
   const filtered = records
-    .filter((record) => Object.values(record).some((value) => String(value).toLocaleLowerCase("es").includes(normalizedQuery)))
-    .sort((first, second) => first.id - second.id);
+    .filter((record) =>
+      Object.values(record).some((value) =>
+        String(value).toLocaleLowerCase("es").includes(normalizedQuery)
+      )
+    )
+    .sort((first, second) => second.id - first.id);
+
   const total = filtered.length;
   const totalPages = Math.max(1, Math.ceil(total / limit));
   const currentPage = Math.min(page, totalPages);
@@ -39,6 +46,35 @@ export function parsePagination(query) {
 
   return {
     page: Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1,
-    limit: Number.isInteger(requestedLimit) && requestedLimit > 0 ? Math.min(requestedLimit, 100) : 10
+    limit: Number.isInteger(requestedLimit) && requestedLimit > 0
+      ? Math.min(requestedLimit, 100)
+      : 10
   };
+}
+
+export function validateCliente(data) {
+  const required = ["nombre", "apellido", "telefono", "email", "localidad"];
+
+  return required.filter(
+    (field) => typeof data[field] !== "string" || !data[field].trim()
+  );
+}
+
+export function validateEquipo(data) {
+  const required = [
+    "clienteId",
+    "tipo",
+    "marca",
+    "modelo",
+    "numeroSerie",
+    "estado",
+    "garantia"
+  ];
+
+  return required.filter(
+    (field) =>
+      data[field] === undefined ||
+      data[field] === null ||
+      String(data[field]).trim() === ""
+  );
 }
