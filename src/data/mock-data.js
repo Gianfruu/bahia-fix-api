@@ -1,4 +1,3 @@
-
 export const clientes = [
   { id: 1, nombre: "Martín", apellido: "Gómez", telefono: "291 455-1020", email: "martin.gomez@example.com", localidad: "Bahía Blanca" },
   { id: 2, nombre: "Lucía", apellido: "Fernández", telefono: "291 488-7641", email: "lucia.fernandez@example.com", localidad: "Punta Alta" },
@@ -17,64 +16,41 @@ export const equipos = [
 
 export function filterAndPaginate(records, query, page, limit) {
   const normalizedQuery = String(query || "").trim().toLocaleLowerCase("es");
-
-  const filtered = records
-    .filter((record) =>
-      Object.values(record).some((value) =>
-        String(value).toLocaleLowerCase("es").includes(normalizedQuery)
-      )
-    )
-    .sort((first, second) => second.id - first.id);
-
+  const filtered = records.filter((record) => Object.values(record).some((value) => String(value).toLocaleLowerCase("es").includes(normalizedQuery))).sort((a, b) => a.id - b.id);
   const total = filtered.length;
   const totalPages = Math.max(1, Math.ceil(total / limit));
   const currentPage = Math.min(page, totalPages);
   const start = (currentPage - 1) * limit;
-
-  return {
-    items: filtered.slice(start, start + limit),
-    total,
-    page: currentPage,
-    limit,
-    totalPages
-  };
+  return { items: filtered.slice(start, start + limit), total, page: currentPage, limit, totalPages };
 }
 
 export function parsePagination(query) {
   const requestedPage = Number.parseInt(query.page, 10);
   const requestedLimit = Number.parseInt(query.limit, 10);
-
   return {
     page: Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1,
-    limit: Number.isInteger(requestedLimit) && requestedLimit > 0
-      ? Math.min(requestedLimit, 100)
-      : 10
+    limit: Number.isInteger(requestedLimit) && requestedLimit > 0 ? Math.min(requestedLimit, 100) : 10
   };
 }
 
 export function validateCliente(data) {
   const required = ["nombre", "apellido", "telefono", "email", "localidad"];
-
-  return required.filter(
-    (field) => typeof data[field] !== "string" || !data[field].trim()
-  );
+  return required.filter((field) => typeof data[field] !== "string" || !data[field].trim());
 }
 
 export function validateEquipo(data) {
-  const required = [
-    "clienteId",
-    "tipo",
-    "marca",
-    "modelo",
-    "numeroSerie",
-    "estado",
-    "garantia"
-  ];
+  const required = ["clienteId", "tipo", "marca", "modelo", "numeroSerie", "estado", "garantia"];
+  return required.filter((field) => data[field] === undefined || data[field] === null || String(data[field]).trim() === "");
+}
 
-  return required.filter(
-    (field) =>
-      data[field] === undefined ||
-      data[field] === null ||
-      String(data[field]).trim() === ""
-  );
+
+export const turnos = [
+  { id: 201, clienteId: 1, equipoId: 101, fecha: "2026-11-04", hora: "09:00", motivo: "Revisión general", procedencia: "Presencial", estado: "Solicitado" },
+  { id: 202, clienteId: 2, equipoId: 102, fecha: "2026-11-05", hora: "10:30", motivo: "Mantenimiento", procedencia: "Localidad vecina", estado: "Confirmado" },
+  { id: 203, clienteId: 3, equipoId: 103, fecha: "2026-11-06", hora: "14:00", motivo: "Evaluación de falla", procedencia: "Presencial", estado: "Solicitado" }
+];
+
+export function validateTurno(data) {
+  const required = ["clienteId", "equipoId", "fecha", "hora", "motivo", "procedencia", "estado"];
+  return required.filter((field) => data[field] === undefined || data[field] === null || String(data[field]).trim() === "");
 }
