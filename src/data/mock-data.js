@@ -14,14 +14,34 @@ export const equipos = [
   { id: 105, clienteId: 5, tipo: "Desmalezadora", marca: "Echo", modelo: "SRM-22", numeroSerie: "ECH-022-7401", estado: "Ingresado", garantia: "A verificar" }
 ];
 
-export function filterAndPaginate(records, query, page, limit) {
+export function sortRecords(records, sortBy = "id", order = "asc") {
+  const allowedFields = records.length ? Object.keys(records[0]) : [];
+  const field = allowedFields.includes(sortBy) ? sortBy : "id";
+  const direction = order === "desc" ? -1 : 1;
+
+  return [...records].sort((a, b) => {
+    const first = a[field];
+    const second = b[field];
+    if (first === second) return 0;
+    if (typeof first === "number" && typeof second === "number") {
+      return (first - second) * direction;
+    }
+    return String(first ?? "").localeCompare(String(second ?? ""), "es", {
+      numeric: true,
+      sensitivity: "base"
+    }) * direction;
+  });
+}
+
+export function filterAndPaginate(records, query, page, limit, sortBy = "id", order = "asc") {
   const normalizedQuery = String(query || "").trim().toLocaleLowerCase("es");
-  const filtered = records.filter((record) => Object.values(record).some((value) => String(value).toLocaleLowerCase("es").includes(normalizedQuery))).sort((a, b) => a.id - b.id);
-  const total = filtered.length;
+  const filtered = records.filter((record) => Object.values(record).some((value) => String(value).toLocaleLowerCase("es").includes(normalizedQuery)));
+  const sorted = sortRecords(filtered, sortBy, order);
+  const total = sorted.length;
   const totalPages = Math.max(1, Math.ceil(total / limit));
   const currentPage = Math.min(page, totalPages);
   const start = (currentPage - 1) * limit;
-  return { items: filtered.slice(start, start + limit), total, page: currentPage, limit, totalPages };
+  return { items: sorted.slice(start, start + limit), total, page: currentPage, limit, totalPages };
 }
 
 export function parsePagination(query) {

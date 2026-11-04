@@ -45,7 +45,9 @@ router.get("/", (req, res) => {
     registros,
     req.query.q || "",
     page,
-    limit
+    limit,
+    req.query.sortBy,
+    req.query.order
   );
 
   return respuesta(

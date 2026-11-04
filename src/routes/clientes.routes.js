@@ -1,4 +1,3 @@
-
 import { Router } from "express";
 import {
   clientes,
@@ -9,6 +8,10 @@ import {
 } from "../data/mock-data.js";
 
 const router = Router();
+
+function validarEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+}
 
 // Obtener listado de clientes
 router.get("/", (req, res) => {
@@ -54,6 +57,14 @@ router.post("/", (req, res) => {
     });
   }
 
+  if (!validarEmail(req.body.email)) {
+    return res.status(400).json({
+      success: false,
+      data: null,
+      message: "Ingresá un correo electrónico válido."
+    });
+  }
+
   const cliente = {
     id: Math.max(0, ...clientes.map((item) => item.id)) + 1,
     ...Object.fromEntries(
@@ -93,6 +104,14 @@ router.put("/:id", (req, res) => {
       success: false,
       data: null,
       message: `Campos obligatorios: ${missing.join(", ")}.`
+    });
+  }
+
+  if (!validarEmail(req.body.email)) {
+    return res.status(400).json({
+      success: false,
+      data: null,
+      message: "Ingresá un correo electrónico válido."
     });
   }
 
