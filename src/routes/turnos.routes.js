@@ -4,7 +4,8 @@ import {
   equipos,
   turnos,
   parsePagination,
-  validateTurno
+  validateTurno,
+  sortRecords
 } from "../data/mock-data.js";
 
 const router = Router();
@@ -60,7 +61,8 @@ function filtrarTurnos(query) {
       return text.includes(term);
     });
   }
-  return result.sort((a, b) => `${a.fecha}T${a.hora}`.localeCompare(`${b.fecha}T${b.hora}`));
+  const sorted = sortRecords(result, query.sortBy || "fecha", query.order || "asc");
+  return sorted;
 }
 
 router.get("/resumen", (req, res) => {

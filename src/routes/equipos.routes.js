@@ -16,7 +16,7 @@ router.get("/", (req, res) => {
 
   return res.status(200).json({
     success: true,
-    data: filterAndPaginate(equipos, req.query.q, page, limit),
+    data: filterAndPaginate(equipos, req.query.q, page, limit, req.query.sortBy, req.query.order),
     message: "Listado de equipos obtenido correctamente."
   });
 });

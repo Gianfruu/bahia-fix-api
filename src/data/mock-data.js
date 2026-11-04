@@ -14,14 +14,34 @@ export const equipos = [
   { id: 105, clienteId: 5, tipo: "Desmalezadora", marca: "Echo", modelo: "SRM-22", numeroSerie: "ECH-022-7401", estado: "Ingresado", garantia: "A verificar" }
 ];
 
-export function filterAndPaginate(records, query, page, limit) {
+export function sortRecords(records, sortBy = "id", order = "asc") {
+  const allowedFields = records.length ? Object.keys(records[0]) : [];
+  const field = allowedFields.includes(sortBy) ? sortBy : "id";
+  const direction = order === "desc" ? -1 : 1;
+
+  return [...records].sort((a, b) => {
+    const first = a[field];
+    const second = b[field];
+    if (first === second) return 0;
+    if (typeof first === "number" && typeof second === "number") {
+      return (first - second) * direction;
+    }
+    return String(first ?? "").localeCompare(String(second ?? ""), "es", {
+      numeric: true,
+      sensitivity: "base"
+    }) * direction;
+  });
+}
+
+export function filterAndPaginate(records, query, page, limit, sortBy = "id", order = "asc") {
   const normalizedQuery = String(query || "").trim().toLocaleLowerCase("es");
-  const filtered = records.filter((record) => Object.values(record).some((value) => String(value).toLocaleLowerCase("es").includes(normalizedQuery))).sort((a, b) => a.id - b.id);
-  const total = filtered.length;
+  const filtered = records.filter((record) => Object.values(record).some((value) => String(value).toLocaleLowerCase("es").includes(normalizedQuery)));
+  const sorted = sortRecords(filtered, sortBy, order);
+  const total = sorted.length;
   const totalPages = Math.max(1, Math.ceil(total / limit));
   const currentPage = Math.min(page, totalPages);
   const start = (currentPage - 1) * limit;
-  return { items: filtered.slice(start, start + limit), total, page: currentPage, limit, totalPages };
+  return { items: sorted.slice(start, start + limit), total, page: currentPage, limit, totalPages };
 }
 
 export function parsePagination(query) {
@@ -54,3 +74,67 @@ export function validateTurno(data) {
   const required = ["clienteId", "equipoId", "fecha", "hora", "motivo", "procedencia", "estado"];
   return required.filter((field) => data[field] === undefined || data[field] === null || String(data[field]).trim() === "");
 }
+
+export const reparaciones = [
+  {
+    id: 301,
+    clienteId: 1,
+    equipoId: 101,
+    fechaIngreso: "2026-10-20",
+    motivo: "El taladro presenta pérdida de potencia.",
+    estado: "Terminado",
+    observaciones: "Se realizó una revisión general y mantenimiento.",
+    clienteNombre: "Martín Gómez",
+    equipoDescripcion: "Taladro Bosch GSB 13 RE",
+    createdAt: "2026-10-20T09:00:00.000Z"
+  },
+  {
+    id: 302,
+    clienteId: 2,
+    equipoId: 102,
+    fechaIngreso: "2026-10-25",
+    motivo: "La motosierra no arranca correctamente.",
+    estado: "En diagnóstico",
+    observaciones: "Pendiente de evaluación técnica.",
+    clienteNombre: "Lucía Fernández",
+    equipoDescripcion: "Motosierra Stihl MS 170",
+    createdAt: "2026-10-25T10:30:00.000Z"
+  },
+  {
+    id: 303,
+    clienteId: 3,
+    equipoId: 103,
+    fechaIngreso: "2026-10-27",
+    motivo: "La amoladora presenta vibraciones.",
+    estado: "Presupuestado",
+    observaciones: "Se detectó desgaste y se preparó un presupuesto.",
+    clienteNombre: "Carlos Pérez",
+    equipoDescripcion: "Amoladora DeWalt DWE402",
+    createdAt: "2026-10-27T14:00:00.000Z"
+  },
+  {
+    id: 304,
+    clienteId: 1,
+    equipoId: 104,
+    fechaIngreso: "2026-10-29",
+    motivo: "El generador no mantiene el funcionamiento.",
+    estado: "En reparación",
+    observaciones: "Reparación en curso.",
+    clienteNombre: "Martín Gómez",
+    equipoDescripcion: "Generador Honda EG 2500",
+    createdAt: "2026-10-29T11:15:00.000Z"
+  },
+  {
+    id: 305,
+    clienteId: 5,
+    equipoId: 105,
+    fechaIngreso: "2026-11-01",
+    motivo: "Mantenimiento general de desmalezadora.",
+    estado: "Recibido",
+    observaciones: "Equipo ingresado para revisión.",
+    clienteNombre: "Diego López",
+    equipoDescripcion: "Desmalezadora Echo SRM-22",
+    createdAt: "2026-11-01T08:45:00.000Z"
+  }
+];
+
