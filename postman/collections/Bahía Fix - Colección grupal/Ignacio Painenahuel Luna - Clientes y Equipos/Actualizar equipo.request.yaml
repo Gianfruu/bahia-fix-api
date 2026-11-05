@@ -1,0 +1,25 @@
+$kind: http-request
+description: Actualiza todos los campos obligatorios y valida el cliente asociado.
+url: "{{base_url}}/equipos/{{equipo_nuevo_id}}"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "clienteId": 1,
+      "tipo": "Taladro",
+      "marca": "Bosch",
+      "modelo": "GSR 120",
+      "numeroSerie": "BOS-120-0001",
+      "estado": "En revisión",
+      "garantia": "A verificar"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('La respuesta HTTP es correcta', function () { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });
+      pm.test('La respuesta contiene el formato estándar', function () { const body = pm.response.json(); pm.expect(body).to.have.property('success', true); pm.expect(body).to.have.property('data'); pm.expect(body).to.have.property('message'); });
+    language: text/javascript
+order: 10000

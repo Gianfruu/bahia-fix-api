@@ -1,0 +1,12 @@
+$kind: collection
+description: "Colección grupal de la API de Bahía Fix, organizada por integrante y módulos según las ramas de trabajo del repositorio. Variable requerida: base_url. Valor local: http://localhost:3000/api/v1. La API utiliza datos simulados en memoria."
+variables:
+  base_url: http://localhost:3000/api/v1
+  cliente_id: "1"
+  equipo_id: "101"
+  turno_id: "201"
+  reparacion_id: "301"
+  cliente_nuevo_id: ""
+  equipo_nuevo_id: ""
+  turno_nuevo_id: ""
+  reparacion_nueva_id: ""

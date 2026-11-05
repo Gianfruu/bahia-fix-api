@@ -1,0 +1,25 @@
+$kind: http-request
+description: El clienteId debe corresponder a un cliente existente.
+url: "{{base_url}}/equipos"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "clienteId": 1,
+      "tipo": "Taladro",
+      "marca": "Bosch",
+      "modelo": "GSR 120",
+      "numeroSerie": "BOS-120-0001",
+      "estado": "Ingresado",
+      "garantia": "A verificar"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Devuelve 201', function () { pm.response.to.have.status(201); });
+      pm.test('Equipo creado', function () { const b=pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b.data).to.have.property('id'); pm.collectionVariables.set('equipo_nuevo_id', String(b.data.id)); });
+    language: text/javascript
+order: 9000

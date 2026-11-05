@@ -1,0 +1,25 @@
+$kind: http-request
+description: El cliente y el equipo deben existir y el equipo debe pertenecer al cliente.
+url: "{{base_url}}/reparaciones"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "clienteId": 1,
+      "equipoId": 101,
+      "fechaIngreso": "2026-11-05",
+      "motivo": "El equipo requiere revisión",
+      "estado": "Recibido",
+      "observaciones": "Ingreso para diagnóstico"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Devuelve 201 o error de validación', function () { pm.expect(pm.response.code).to.be.oneOf([201,400]); });
+      pm.test('Respuesta con formato estándar', function () { const b=pm.response.json(); pm.expect(b).to.have.property('success'); pm.expect(b).to.have.property('data'); });
+      if (pm.response.code === 201) { pm.collectionVariables.set('reparacion_nueva_id', String(pm.response.json().data.id)); }
+    language: text/javascript
+order: 3000
