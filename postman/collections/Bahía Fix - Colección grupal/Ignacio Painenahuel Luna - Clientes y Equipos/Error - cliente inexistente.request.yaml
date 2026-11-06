@@ -1,0 +1,11 @@
+$kind: http-request
+description: Ejemplo de respuesta 404 para un ID inexistente.
+url: "{{base_url}}/clientes/99999"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Devuelve 404', function () { pm.response.to.have.status(404); });
+      pm.test('La respuesta indica error', function () { const body = pm.response.json(); pm.expect(body.success).to.eql(false); pm.expect(body.data).to.eql(null); });
+    language: text/javascript
+order: 6000

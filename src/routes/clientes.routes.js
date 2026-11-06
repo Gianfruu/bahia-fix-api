@@ -19,7 +19,7 @@ router.get("/", (req, res) => {
 
   return res.status(200).json({
     success: true,
-    data: filterAndPaginate(clientes, req.query.q, page, limit),
+    data: filterAndPaginate(clientes, req.query.q, page, limit, req.query.sortBy, req.query.order),
     message: "Listado de clientes obtenido correctamente."
   });
 });

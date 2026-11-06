@@ -1,0 +1,23 @@
+$kind: http-request
+description: Actualiza todos los campos obligatorios del cliente.
+url: "{{base_url}}/clientes/{{cliente_nuevo_id}}"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "nombre": "Juan",
+      "apellido": "Pérez",
+      "telefono": "291 400-1111",
+      "email": "juan.perez@example.com",
+      "localidad": "Bahía Blanca"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('La respuesta HTTP es correcta', function () { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });
+      pm.test('La respuesta contiene el formato estándar', function () { const body = pm.response.json(); pm.expect(body).to.have.property('success', true); pm.expect(body).to.have.property('data'); pm.expect(body).to.have.property('message'); });
+    language: text/javascript
+order: 4000

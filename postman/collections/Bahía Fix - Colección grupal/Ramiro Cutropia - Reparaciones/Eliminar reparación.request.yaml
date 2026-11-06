@@ -1,0 +1,9 @@
+$kind: http-request
+description: Elimina la orden indicada.
+url: "{{base_url}}/reparaciones/{{reparacion_nueva_id}}"
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: pm.test('Respuesta esperada', function () { pm.expect(pm.response.code).to.be.oneOf([200,404]); });
+    language: text/javascript
+order: 5000

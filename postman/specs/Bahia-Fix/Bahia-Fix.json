@@ -1,0 +1,853 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Bahia-Fix",
+    "version": "1.0.0",
+    "description": "Colección grupal de la API de Bahía Fix, organizada por integrante y módulos según las ramas de trabajo del repositorio. Variable requerida: base_url. Valor local: http://localhost:3000/api/v1. La API utiliza datos simulados en memoria."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1"
+    }
+  ],
+  "paths": {
+    "/clientes": {
+      "get": {
+        "summary": "Listar clientes",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 10
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": ""
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "id"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "asc"
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "Ignacio Painenahuel Luna - Clientes y Equipos"
+        ],
+        "description": "Listado con paginación y búsqueda. La ruta utiliza page, limit y q; sortBy/order no están aplicados en esta ruta actualmente."
+      },
+      "post": {
+        "summary": "Crear cliente",
+        "responses": {},
+        "tags": [
+          "Ignacio Painenahuel Luna - Clientes y Equipos"
+        ],
+        "description": "Crea un cliente. Requiere nombre, apellido, teléfono, email válido y localidad.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nombre": {
+                    "type": "string"
+                  },
+                  "apellido": {
+                    "type": "string"
+                  },
+                  "telefono": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "localidad": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "nombre": "Juan",
+                "apellido": "Pérez",
+                "telefono": "291 400-0000",
+                "email": "juan.perez@example.com",
+                "localidad": "Bahía Blanca"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/clientes/{cliente_id}": {
+      "get": {
+        "summary": "Obtener cliente por ID",
+        "responses": {},
+        "tags": [
+          "Ignacio Painenahuel Luna - Clientes y Equipos"
+        ],
+        "description": "Obtiene todos los atributos del cliente indicado."
+      },
+      "parameters": [
+        {
+          "name": "cliente_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "example": ""
+        }
+      ],
+      "put": {
+        "summary": "Actualizar cliente",
+        "responses": {},
+        "tags": [
+          "Ignacio Painenahuel Luna - Clientes y Equipos"
+        ],
+        "description": "Actualiza todos los campos obligatorios del cliente.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nombre": {
+                    "type": "string"
+                  },
+                  "apellido": {
+                    "type": "string"
+                  },
+                  "telefono": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "localidad": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "nombre": "Juan",
+                "apellido": "Pérez",
+                "telefono": "291 400-1111",
+                "email": "juan.perez@example.com",
+                "localidad": "Bahía Blanca"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar cliente",
+        "responses": {},
+        "tags": [
+          "Ignacio Painenahuel Luna - Clientes y Equipos"
+        ],
+        "description": "Elimina el cliente si no tiene equipos asociados. Si tiene equipos asociados, devuelve 409."
+      }
+    },
+    "/clientes/99999": {
+      "get": {
+        "summary": "Error - cliente inexistente",
+        "responses": {},
+        "tags": [
+          "Ignacio Painenahuel Luna - Clientes y Equipos"
+        ],
+        "description": "Ejemplo de respuesta 404 para un ID inexistente."
+      }
+    },
+    "/equipos": {
+      "get": {
+        "summary": "Listar equipos",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 10
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": ""
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "marca"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "asc"
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "Ignacio Painenahuel Luna - Clientes y Equipos"
+        ],
+        "description": "Listado paginado, búsqueda q y ordenamiento sortBy/order."
+      },
+      "post": {
+        "summary": "Crear equipo",
+        "responses": {},
+        "tags": [
+          "Ignacio Painenahuel Luna - Clientes y Equipos"
+        ],
+        "description": "El clienteId debe corresponder a un cliente existente.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "clienteId": {
+                    "type": "integer"
+                  },
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "marca": {
+                    "type": "string"
+                  },
+                  "modelo": {
+                    "type": "string"
+                  },
+                  "numeroSerie": {
+                    "type": "string"
+                  },
+                  "estado": {
+                    "type": "string"
+                  },
+                  "garantia": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "clienteId": 1,
+                "tipo": "Taladro",
+                "marca": "Bosch",
+                "modelo": "GSR 120",
+                "numeroSerie": "BOS-120-0001",
+                "estado": "Ingresado",
+                "garantia": "A verificar"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/equipos/{equipo_id}": {
+      "get": {
+        "summary": "Obtener equipo por ID",
+        "responses": {},
+        "tags": [
+          "Ignacio Painenahuel Luna - Clientes y Equipos"
+        ],
+        "description": "Obtiene todos los atributos del equipo."
+      },
+      "parameters": [
+        {
+          "name": "equipo_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "example": ""
+        }
+      ],
+      "put": {
+        "summary": "Actualizar equipo",
+        "responses": {},
+        "tags": [
+          "Ignacio Painenahuel Luna - Clientes y Equipos"
+        ],
+        "description": "Actualiza todos los campos obligatorios y valida el cliente asociado.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "clienteId": {
+                    "type": "integer"
+                  },
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "marca": {
+                    "type": "string"
+                  },
+                  "modelo": {
+                    "type": "string"
+                  },
+                  "numeroSerie": {
+                    "type": "string"
+                  },
+                  "estado": {
+                    "type": "string"
+                  },
+                  "garantia": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "clienteId": 1,
+                "tipo": "Taladro",
+                "marca": "Bosch",
+                "modelo": "GSR 120",
+                "numeroSerie": "BOS-120-0001",
+                "estado": "En revisión",
+                "garantia": "A verificar"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar equipo",
+        "responses": {},
+        "tags": [
+          "Ignacio Painenahuel Luna - Clientes y Equipos"
+        ],
+        "description": "Elimina el equipo indicado."
+      }
+    },
+    "/equipos/99999": {
+      "get": {
+        "summary": "Error - equipo inexistente",
+        "responses": {},
+        "tags": [
+          "Ignacio Painenahuel Luna - Clientes y Equipos"
+        ],
+        "description": "Ejemplo de respuesta 404 para un ID inexistente."
+      }
+    },
+    "/reparaciones": {
+      "get": {
+        "summary": "Listar reparaciones",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 10
+          },
+          {
+            "name": "estado",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": ""
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": ""
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "fechaIngreso"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "desc"
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "Ramiro Cutropia - Reparaciones"
+        ],
+        "description": "Permite filtrar por estado y q, ordenar con sortBy/order y paginar."
+      },
+      "post": {
+        "summary": "Crear reparación",
+        "responses": {},
+        "tags": [
+          "Ramiro Cutropia - Reparaciones"
+        ],
+        "description": "El cliente y el equipo deben existir y el equipo debe pertenecer al cliente.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "clienteId": {
+                    "type": "integer"
+                  },
+                  "equipoId": {
+                    "type": "integer"
+                  },
+                  "fechaIngreso": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "motivo": {
+                    "type": "string"
+                  },
+                  "estado": {
+                    "type": "string"
+                  },
+                  "observaciones": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "clienteId": 1,
+                "equipoId": 101,
+                "fechaIngreso": "2026-11-05",
+                "motivo": "El equipo requiere revisión",
+                "estado": "Recibido",
+                "observaciones": "Ingreso para diagnóstico"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reparaciones/{reparacion_id}": {
+      "get": {
+        "summary": "Obtener reparación por ID",
+        "responses": {},
+        "tags": [
+          "Ramiro Cutropia - Reparaciones"
+        ],
+        "description": "Obtiene todos los atributos de la orden."
+      },
+      "parameters": [
+        {
+          "name": "reparacion_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "example": ""
+        }
+      ],
+      "put": {
+        "summary": "Actualizar reparación",
+        "responses": {},
+        "tags": [
+          "Ramiro Cutropia - Reparaciones"
+        ],
+        "description": "Actualiza la orden y valida la relación entre cliente y equipo.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "clienteId": {
+                    "type": "integer"
+                  },
+                  "equipoId": {
+                    "type": "integer"
+                  },
+                  "fechaIngreso": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "motivo": {
+                    "type": "string"
+                  },
+                  "estado": {
+                    "type": "string"
+                  },
+                  "observaciones": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "clienteId": 1,
+                "equipoId": 101,
+                "fechaIngreso": "2026-11-05",
+                "motivo": "El equipo requiere revisión",
+                "estado": "En diagnóstico",
+                "observaciones": "Se inició la evaluación"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar reparación",
+        "responses": {},
+        "tags": [
+          "Ramiro Cutropia - Reparaciones"
+        ],
+        "description": "Elimina la orden indicada."
+      }
+    },
+    "/reparaciones/99999": {
+      "get": {
+        "summary": "Error - reparación inexistente",
+        "responses": {},
+        "tags": [
+          "Ramiro Cutropia - Reparaciones"
+        ],
+        "description": "Ejemplo de respuesta 404 para un ID inexistente."
+      }
+    },
+    "/turnos": {
+      "get": {
+        "summary": "Listar turnos",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 10
+          },
+          {
+            "name": "fecha",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": ""
+          },
+          {
+            "name": "estado",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": ""
+          },
+          {
+            "name": "clienteId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": ""
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": ""
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "fecha"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "asc"
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "Gianfranco Campagnucci - Turnos"
+        ],
+        "description": "Permite filtrar por fecha, estado, clienteId y q; ordenar con sortBy/order; y paginar."
+      },
+      "post": {
+        "summary": "Crear turno",
+        "responses": {},
+        "tags": [
+          "Gianfranco Campagnucci - Turnos"
+        ],
+        "description": "El cliente y el equipo deben existir y corresponder entre sí. No puede existir otro turno activo en la misma fecha y hora.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "clienteId": {
+                    "type": "integer"
+                  },
+                  "equipoId": {
+                    "type": "integer"
+                  },
+                  "fecha": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "hora": {
+                    "type": "string"
+                  },
+                  "motivo": {
+                    "type": "string"
+                  },
+                  "procedencia": {
+                    "type": "string"
+                  },
+                  "estado": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "clienteId": 1,
+                "equipoId": 101,
+                "fecha": "2026-11-10",
+                "hora": "11:00",
+                "motivo": "Control general",
+                "procedencia": "Presencial",
+                "estado": "Solicitado"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/turnos/resumen": {
+      "get": {
+        "summary": "Resumen de turnos",
+        "responses": {},
+        "tags": [
+          "Gianfranco Campagnucci - Turnos"
+        ],
+        "description": "Devuelve el total de turnos por estado."
+      }
+    },
+    "/turnos/{turno_id}": {
+      "get": {
+        "summary": "Obtener turno por ID",
+        "responses": {},
+        "tags": [
+          "Gianfranco Campagnucci - Turnos"
+        ],
+        "description": "Obtiene todos los atributos del turno."
+      },
+      "parameters": [
+        {
+          "name": "turno_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "example": ""
+        }
+      ],
+      "put": {
+        "summary": "Actualizar turno",
+        "responses": {},
+        "tags": [
+          "Gianfranco Campagnucci - Turnos"
+        ],
+        "description": "Actualiza un turno y valida fecha, horario, relaciones y conflictos.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "clienteId": {
+                    "type": "integer"
+                  },
+                  "equipoId": {
+                    "type": "integer"
+                  },
+                  "fecha": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "hora": {
+                    "type": "string"
+                  },
+                  "motivo": {
+                    "type": "string"
+                  },
+                  "procedencia": {
+                    "type": "string"
+                  },
+                  "estado": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "clienteId": 1,
+                "equipoId": 101,
+                "fecha": "2026-11-10",
+                "hora": "11:30",
+                "motivo": "Control general actualizado",
+                "procedencia": "Presencial",
+                "estado": "Confirmado"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar turno",
+        "responses": {},
+        "tags": [
+          "Gianfranco Campagnucci - Turnos"
+        ],
+        "description": "Elimina el turno indicado."
+      }
+    },
+    "/turnos/{turno_nuevo_id}/estado": {
+      "patch": {
+        "summary": "Actualizar estado del turno",
+        "responses": {},
+        "tags": [
+          "Gianfranco Campagnucci - Turnos"
+        ],
+        "description": "Cambia únicamente el estado. Valores permitidos: Solicitado, Confirmado, Cancelado y Atendido.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "estado": "Atendido"
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "turno_nuevo_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "example": ""
+        }
+      ]
+    },
+    "/turnos/99999": {
+      "get": {
+        "summary": "Error - turno inexistente",
+        "responses": {},
+        "tags": [
+          "Gianfranco Campagnucci - Turnos"
+        ],
+        "description": "Ejemplo de respuesta 404 para un ID inexistente."
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Estado de la API",
+        "responses": {},
+        "tags": [
+          "General"
+        ],
+        "description": "Comprueba que la API esté disponible."
+      }
+    },
+    "/ruta-inexistente": {
+      "get": {
+        "summary": "Ruta inexistente",
+        "responses": {},
+        "tags": [
+          "General"
+        ],
+        "description": "Ejemplo de respuesta 404 del middleware de rutas inexistentes."
+      }
+    }
+  }
+}

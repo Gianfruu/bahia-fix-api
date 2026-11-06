@@ -1,0 +1,23 @@
+$kind: http-request
+description: Crea un cliente. Requiere nombre, apellido, teléfono, email válido y localidad.
+url: "{{base_url}}/clientes"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "nombre": "Juan",
+      "apellido": "Pérez",
+      "telefono": "291 400-0000",
+      "email": "juan.perez@example.com",
+      "localidad": "Bahía Blanca"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Devuelve 201', function () { pm.response.to.have.status(201); });
+      pm.test('Cliente creado', function () { const b=pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b.data).to.have.property('id'); pm.collectionVariables.set('cliente_nuevo_id', String(b.data.id)); });
+    language: text/javascript
+order: 3000

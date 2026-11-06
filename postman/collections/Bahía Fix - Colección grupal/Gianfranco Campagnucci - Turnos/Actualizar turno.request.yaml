@@ -1,0 +1,23 @@
+$kind: http-request
+description: Actualiza un turno y valida fecha, horario, relaciones y conflictos.
+url: "{{base_url}}/turnos/{{turno_nuevo_id}}"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "clienteId": 1,
+      "equipoId": 101,
+      "fecha": "2026-11-10",
+      "hora": "11:30",
+      "motivo": "Control general actualizado",
+      "procedencia": "Presencial",
+      "estado": "Confirmado"
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Respuesta esperada', function () { pm.expect(pm.response.code).to.be.oneOf([200,400,404,409]); });
+    language: text/javascript
+order: 5000

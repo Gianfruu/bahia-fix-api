@@ -1,0 +1,22 @@
+$kind: http-request
+description: Actualiza la orden y valida la relación entre cliente y equipo.
+url: "{{base_url}}/reparaciones/{{reparacion_nueva_id}}"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "clienteId": 1,
+      "equipoId": 101,
+      "fechaIngreso": "2026-11-05",
+      "motivo": "El equipo requiere revisión",
+      "estado": "En diagnóstico",
+      "observaciones": "Se inició la evaluación"
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Respuesta esperada', function () { pm.expect(pm.response.code).to.be.oneOf([200,400,404]); });
+    language: text/javascript
+order: 4000

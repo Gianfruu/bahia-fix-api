@@ -1,0 +1,17 @@
+$kind: http-request
+description: Listado paginado, búsqueda q y ordenamiento sortBy/order.
+url: "{{base_url}}/equipos?page=1&limit=10&q=&sortBy=marca&order=asc"
+method: GET
+queryParams:
+  page: "1"
+  limit: "10"
+  q: ""
+  sortBy: marca
+  order: asc
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('La respuesta HTTP es correcta', function () { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });
+      pm.test('La respuesta contiene el formato estándar', function () { const body = pm.response.json(); pm.expect(body).to.have.property('success', true); pm.expect(body).to.have.property('data'); pm.expect(body).to.have.property('message'); });
+    language: text/javascript
+order: 7000

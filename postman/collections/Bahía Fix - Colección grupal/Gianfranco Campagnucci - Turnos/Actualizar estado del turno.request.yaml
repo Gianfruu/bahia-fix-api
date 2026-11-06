@@ -1,0 +1,17 @@
+$kind: http-request
+description: "Cambia únicamente el estado. Valores permitidos: Solicitado, Confirmado, Cancelado y Atendido."
+url: "{{base_url}}/turnos/{{turno_nuevo_id}}/estado"
+method: PATCH
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "estado": "Atendido"
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('Respuesta esperada', function () { pm.expect(pm.response.code).to.be.oneOf([200,400,404]); });
+    language: text/javascript
+order: 6000
