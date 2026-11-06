@@ -1,9 +1,11 @@
-# Use this workspace to collaborate
 workspace:
   id: 1140eecc-051d-4fa2-87ea-b5dc5184c358
-
-# All resources in the `postman/` folder are automatically registered in Local View.
-# Point to additional files outside the `postman/` folder to register them individually. Example:
-#localResources:
-#  collections:
-#    - ../tests/E2E Test Collection/
+cloudResources:
+  collections:
+    ../postman/collections/Bahía Fix - Colección grupal: 7b9ebcac-e70a-4d1e-b37a-081790d531bd
+localResources:
+  specs:
+    - ../postman/specs/Bahia-Fix/Bahia-Fix.json
+resourceNameMappings:
+  specs:
+    - ../postman/specs/Bahia-Fix/Bahia-Fix.json: Bahia-Fix

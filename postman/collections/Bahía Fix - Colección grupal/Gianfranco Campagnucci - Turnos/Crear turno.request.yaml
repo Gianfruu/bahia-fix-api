@@ -1,0 +1,26 @@
+$kind: http-request
+description: El cliente y el equipo deben existir y corresponder entre sí. No puede existir otro turno activo en la misma fecha y hora.
+url: "{{base_url}}/turnos"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "clienteId": 1,
+      "equipoId": 101,
+      "fecha": "2026-11-10",
+      "hora": "11:00",
+      "motivo": "Control general",
+      "procedencia": "Presencial",
+      "estado": "Solicitado"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Devuelve 201 o error de validación/conflicto', function () { pm.expect(pm.response.code).to.be.oneOf([201,400,409]); });
+      pm.test('Respuesta con formato estándar', function () { const b=pm.response.json(); pm.expect(b).to.have.property('success'); pm.expect(b).to.have.property('data'); });
+      if (pm.response.code === 201) { pm.collectionVariables.set('turno_nuevo_id', String(pm.response.json().data.id)); }
+    language: text/javascript
+order: 4000

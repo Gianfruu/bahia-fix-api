@@ -1,0 +1,19 @@
+$kind: http-request
+description: Listado con paginación y búsqueda. La ruta utiliza page, limit y q; sortBy/order no están aplicados en esta ruta actualmente.
+url: "{{base_url}}/clientes?page=1&limit=10&q=&sortBy=id&order=asc"
+method: GET
+headers:
+  Content-Type: application/json
+queryParams:
+  page: "1"
+  limit: "10"
+  q: ""
+  sortBy: id
+  order: asc
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('La respuesta HTTP es correcta', function () { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });
+      pm.test('La respuesta contiene el formato estándar', function () { const body = pm.response.json(); pm.expect(body).to.have.property('success', true); pm.expect(body).to.have.property('data'); pm.expect(body).to.have.property('message'); });
+    language: text/javascript
+order: 1000

@@ -1,0 +1,23 @@
+$kind: http-request
+description: Debe responder 400 cuando el correo no tiene un formato válido.
+url: "{{base_url}}/clientes"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "nombre": "Juan",
+      "apellido": "Pérez",
+      "telefono": "291 400-0000",
+      "email": "correo-invalido",
+      "localidad": "Bahía Blanca"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Devuelve 400', function () { pm.response.to.have.status(400); });
+      pm.test('Mensaje de validación', function () { pm.expect(pm.response.json().message).to.eql('Ingresá un correo electrónico válido.'); });
+    language: text/javascript
+order: 4000
