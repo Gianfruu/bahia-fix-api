@@ -9,20 +9,99 @@ import {
 
 const router = Router();
 
-function validar(data) {
-  const obligatorios = [
-    "clienteId",
-    "equipoId",
-    "fechaIngreso",
-    "motivo",
-    "estado"
-  ];
+const estadosValidos = [
+  "Recibido",
+  "En diagnóstico",
+  "Presupuestado",
+  "Aprobado",
+  "En reparación",
+  "Terminado",
+  "Entregado"
+];
 
-  return obligatorios.filter((campo) =>
-    data[campo] === undefined ||
-    data[campo] === null ||
-    String(data[campo]).trim() === ""
+const garantiasValidas = ["A verificar", "En garantía", "Fuera de garantía"];
+
+function validar(data) {
+  const errores = [];
+  const obligatorios = ["clienteId", "equipoId", "fechaIngreso", "motivo", "estado"];
+
+  obligatorios.forEach((campo) => {
+    if (data[campo] === undefined || data[campo] === null || String(data[campo]).trim() === "") {
+      errores.push(`El campo ${campo} es obligatorio.`);
+    }
+  });
+
+  ["clienteId", "equipoId"].forEach((campo) => {
+    if (data[campo] !== undefined && (!Number.isInteger(Number(data[campo])) || Number(data[campo]) <= 0)) {
+      errores.push(`El campo ${campo} debe ser un identificador válido.`);
+    }
+  });
+
+  if (data.fechaIngreso && !/^\d{4}-\d{2}-\d{2}$/.test(data.fechaIngreso)) {
+    errores.push("La fecha de ingreso debe tener el formato AAAA-MM-DD.");
+  } else if (data.fechaIngreso) {
+    const fecha = new Date(`${data.fechaIngreso}T00:00:00`);
+    if (Number.isNaN(fecha.getTime()) || fecha.toISOString().slice(0, 10) !== data.fechaIngreso) {
+      errores.push("La fecha de ingreso no es válida.");
+    }
+  }
+
+  if (data.motivo !== undefined && (typeof data.motivo !== "string" || !data.motivo.trim())) {
+    errores.push("El motivo debe ser un texto válido.");
+  }
+
+  if (data.estado && !estadosValidos.includes(data.estado)) {
+    errores.push("El estado de la reparación no es válido.");
+  }
+
+  if (data.garantia !== undefined && !garantiasValidas.includes(data.garantia)) {
+    errores.push("La garantía indicada no es válida.");
+  }
+
+  const manoObra = data.manoObra === undefined ? 0 : Number(data.manoObra);
+  if (!Number.isFinite(manoObra) || manoObra < 0) {
+    errores.push("La mano de obra debe ser un importe igual o mayor a cero.");
+  }
+
+  if (data.repuestos !== undefined && !Array.isArray(data.repuestos)) {
+    errores.push("Los repuestos deben enviarse como una lista.");
+  } else if (Array.isArray(data.repuestos)) {
+    data.repuestos.forEach((item, index) => {
+      const cantidad = Number(item?.cantidad);
+      const precio = Number(item?.precio);
+      if (!item || typeof item.descripcion !== "string" || !item.descripcion.trim()) {
+        errores.push(`El repuesto ${index + 1} debe tener una descripción.`);
+      }
+      if (!Number.isInteger(cantidad) || cantidad <= 0) {
+        errores.push(`La cantidad del repuesto ${index + 1} debe ser un entero mayor a cero.`);
+      }
+      if (!Number.isFinite(precio) || precio < 0) {
+        errores.push(`El precio del repuesto ${index + 1} debe ser igual o mayor a cero.`);
+      }
+    });
+  }
+
+  return errores;
+}
+
+function normalizarImportes(data) {
+  const manoObra = Number(data.manoObra ?? 0);
+  const repuestos = (data.repuestos || []).map((item) => ({
+    descripcion: item.descripcion.trim(),
+    cantidad: Number(item.cantidad),
+    precio: Number(item.precio)
+  }));
+  const totalRepuestos = repuestos.reduce(
+    (total, item) => total + item.cantidad * item.precio,
+    0
   );
+
+  return {
+    ...data,
+    manoObra,
+    repuestos,
+    total: manoObra + totalRepuestos
+  };
 }
 
 function respuesta(res, status, data, message) {
@@ -84,7 +163,7 @@ router.post("/", (req, res) => {
     return res.status(400).json({
       success: false,
       data: null,
-      message: `Campos obligatorios: ${faltantes.join(", ")}.`
+      message: faltantes.join(" ")
     });
   }
 
@@ -111,11 +190,12 @@ router.post("/", (req, res) => {
     });
   }
 
+  const datosNormalizados = normalizarImportes(data);
   const nueva = {
     id: reparaciones.length
       ? Math.max(...reparaciones.map((item) => Number(item.id) || 0)) + 1
       : 1,
-    ...data,
+    ...datosNormalizados,
     clienteId: Number(data.clienteId),
     equipoId: Number(data.equipoId),
     clienteNombre: `${cliente.nombre} ${cliente.apellido}`,
@@ -148,7 +228,7 @@ router.put("/:id", (req, res) => {
     return res.status(400).json({
       success: false,
       data: null,
-      message: `Campos obligatorios: ${faltantes.join(", ")}.`
+      message: faltantes.join(" ")
     });
   }
 
@@ -167,7 +247,8 @@ router.put("/:id", (req, res) => {
     });
   }
 
-  Object.assign(reparacion, data, {
+  const datosNormalizados = normalizarImportes(data);
+  Object.assign(reparacion, datosNormalizados, {
     clienteId: Number(data.clienteId),
     equipoId: Number(data.equipoId),
     clienteNombre: `${cliente.nombre} ${cliente.apellido}`,
