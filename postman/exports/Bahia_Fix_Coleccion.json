@@ -1,0 +1,1563 @@
+{
+  "info": {
+    "_postman_id": "8b6e5f70-3d7a-4f1e-9c2b-bahiafix-grupal",
+    "name": "Bahía Fix - Colección grupal",
+    "description": "Colección grupal de la API de Bahía Fix, organizada por integrante y módulos. Variable requerida: base_url (valor local: http://localhost:3000/api/v1). La API utiliza datos simulados en memoria; reiniciar el backend restaura los datos iniciales.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "cliente_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "equipo_id",
+      "value": "101",
+      "type": "string"
+    },
+    {
+      "key": "turno_id",
+      "value": "201",
+      "type": "string"
+    },
+    {
+      "key": "reparacion_id",
+      "value": "301",
+      "type": "string"
+    },
+    {
+      "key": "cliente_nuevo_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "equipo_nuevo_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "turno_nuevo_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "reparacion_nueva_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Ignacio Painenahuel Luna - Clientes y Equipos",
+      "item": [
+        {
+          "name": "Listar clientes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clientes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": false
+                },
+                {
+                  "key": "q",
+                  "value": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Listado de clientes con paginación (page, limit) y búsqueda por texto (q)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b).to.have.property('data'); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Obtener cliente por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/clientes/{{cliente_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "{{cliente_id}}"
+              ]
+            },
+            "description": "Obtiene todos los atributos del cliente indicado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b).to.have.property('data'); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clientes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            },
+            "description": "Crea un cliente. Requiere nombre, apellido, teléfono, email válido y localidad.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Pérez\",\n  \"telefono\": \"291 400-0000\",\n  \"email\": \"juan.perez@example.com\",\n  \"localidad\": \"Bahía Blanca\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 201', function () { pm.response.to.have.status(201); });",
+                  "pm.test('Cliente creado', function () { const b=pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b.data).to.have.property('id'); pm.collectionVariables.set('cliente_nuevo_id', String(b.data.id)); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar cliente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clientes/{{cliente_nuevo_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "{{cliente_nuevo_id}}"
+              ]
+            },
+            "description": "Actualiza todos los campos obligatorios del cliente.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Pérez\",\n  \"telefono\": \"291 400-1111\",\n  \"email\": \"juan.perez@example.com\",\n  \"localidad\": \"Bahía Blanca\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b).to.have.property('data'); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/clientes/{{cliente_nuevo_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "{{cliente_nuevo_id}}"
+              ]
+            },
+            "description": "Elimina el cliente si no tiene equipos asociados. Si tiene equipos asociados, devuelve 409."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('El registro nuevo se elimina correctamente', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta de eliminación correcta', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Error - cliente inexistente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/clientes/99999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "99999"
+              ]
+            },
+            "description": "Ejemplo de respuesta 404 para un ID inexistente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 404', function () { pm.response.to.have.status(404); });",
+                  "pm.test('La respuesta indica error', function () { const body = pm.response.json(); pm.expect(body.success).to.eql(false); pm.expect(body.data).to.eql(null); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar equipos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/equipos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "equipos"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": false
+                },
+                {
+                  "key": "q",
+                  "value": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sortBy",
+                  "value": "marca",
+                  "disabled": false
+                },
+                {
+                  "key": "order",
+                  "value": "asc",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Listado paginado, búsqueda q y ordenamiento sortBy/order."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b).to.have.property('data'); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Obtener equipo por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/equipos/{{equipo_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "equipos",
+                "{{equipo_id}}"
+              ]
+            },
+            "description": "Obtiene todos los atributos del equipo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b).to.have.property('data'); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear equipo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/equipos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "equipos"
+              ]
+            },
+            "description": "El clienteId debe corresponder a un cliente existente.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"tipo\": \"Taladro\",\n  \"marca\": \"Bosch\",\n  \"modelo\": \"GSR 120\",\n  \"numeroSerie\": \"BOS-120-0001\",\n  \"estado\": \"Ingresado\",\n  \"garantia\": \"A verificar\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 201', function () { pm.response.to.have.status(201); });",
+                  "pm.test('Equipo creado', function () { const b=pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b.data).to.have.property('id'); pm.collectionVariables.set('equipo_nuevo_id', String(b.data.id)); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar equipo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/equipos/{{equipo_nuevo_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "equipos",
+                "{{equipo_nuevo_id}}"
+              ]
+            },
+            "description": "Actualiza todos los campos obligatorios y valida el cliente asociado.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"tipo\": \"Taladro\",\n  \"marca\": \"Bosch\",\n  \"modelo\": \"GSR 120\",\n  \"numeroSerie\": \"BOS-120-0001\",\n  \"estado\": \"En revisión\",\n  \"garantia\": \"A verificar\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b).to.have.property('data'); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar equipo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/equipos/{{equipo_nuevo_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "equipos",
+                "{{equipo_nuevo_id}}"
+              ]
+            },
+            "description": "Elimina el equipo indicado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('El registro nuevo se elimina correctamente', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta de eliminación correcta', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Error - equipo inexistente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/equipos/99999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "equipos",
+                "99999"
+              ]
+            },
+            "description": "Ejemplo de respuesta 404 para un ID inexistente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 404', function () { pm.response.to.have.status(404); });",
+                  "pm.test('La respuesta indica error', function () { const body = pm.response.json(); pm.expect(body.success).to.eql(false); pm.expect(body.data).to.eql(null); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ramiro Cutropia - Reparaciones",
+      "item": [
+        {
+          "name": "Listar reparaciones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reparaciones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reparaciones"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": false
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "disabled": false
+                },
+                {
+                  "key": "q",
+                  "value": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sortBy",
+                  "value": "fechaIngreso",
+                  "disabled": false
+                },
+                {
+                  "key": "order",
+                  "value": "desc",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Permite filtrar por estado y q, ordenar con sortBy/order y paginar."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b).to.have.property('data'); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Obtener reparación por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reparaciones/{{reparacion_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reparaciones",
+                "{{reparacion_id}}"
+              ]
+            },
+            "description": "Obtiene todos los atributos de la orden."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b).to.have.property('data'); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear reparación",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reparaciones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reparaciones"
+              ]
+            },
+            "description": "El cliente y el equipo deben existir y el equipo debe pertenecer al cliente.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"equipoId\": 101,\n  \"fechaIngreso\": \"2026-11-12\",\n  \"motivo\": \"El equipo requiere revisión\",\n  \"estado\": \"Recibido\",\n  \"observaciones\": \"Ingreso para diagnóstico\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 201 o error de validación', function () { pm.expect(pm.response.code).to.be.oneOf([201,400]); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b=pm.response.json(); pm.expect(b).to.have.property('success'); pm.expect(b).to.have.property('data'); });",
+                  "if (pm.response.code === 201) { pm.collectionVariables.set('reparacion_nueva_id', String(pm.response.json().data.id)); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar reparación",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reparaciones/{{reparacion_nueva_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reparaciones",
+                "{{reparacion_nueva_id}}"
+              ]
+            },
+            "description": "Actualiza la orden y valida la relación entre cliente y equipo.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"equipoId\": 101,\n  \"fechaIngreso\": \"2026-11-12\",\n  \"motivo\": \"El equipo requiere revisión\",\n  \"estado\": \"En diagnóstico\",\n  \"observaciones\": \"Se inició la evaluación\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b).to.have.property('data'); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar reparación",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reparaciones/{{reparacion_nueva_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reparaciones",
+                "{{reparacion_nueva_id}}"
+              ]
+            },
+            "description": "Elimina la orden indicada."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('El registro nuevo se elimina correctamente', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta de eliminación correcta', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Error - reparación inexistente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reparaciones/99999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reparaciones",
+                "99999"
+              ]
+            },
+            "description": "Ejemplo de respuesta 404 para un ID inexistente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 404', function () { pm.response.to.have.status(404); });",
+                  "pm.test('La respuesta indica error', function () { const body = pm.response.json(); pm.expect(body.success).to.eql(false); pm.expect(body.data).to.eql(null); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Gianfranco Campagnucci - Turnos",
+      "item": [
+        {
+          "name": "Listar turnos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/turnos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "turnos"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": false
+                },
+                {
+                  "key": "fecha",
+                  "value": "",
+                  "disabled": false
+                },
+                {
+                  "key": "estado",
+                  "value": "",
+                  "disabled": false
+                },
+                {
+                  "key": "clienteId",
+                  "value": "",
+                  "disabled": false
+                },
+                {
+                  "key": "q",
+                  "value": "",
+                  "disabled": false
+                },
+                {
+                  "key": "sortBy",
+                  "value": "fecha",
+                  "disabled": false
+                },
+                {
+                  "key": "order",
+                  "value": "asc",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Permite filtrar por fecha, estado, clienteId y q; ordenar con sortBy/order; y paginar."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b).to.have.property('data'); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Resumen de turnos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/turnos/resumen",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "turnos",
+                "resumen"
+              ]
+            },
+            "description": "Devuelve el total de turnos por estado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b).to.have.property('data'); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Obtener turno por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/turnos/{{turno_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "turnos",
+                "{{turno_id}}"
+              ]
+            },
+            "description": "Obtiene todos los atributos del turno."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b).to.have.property('data'); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear turno",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/turnos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "turnos"
+              ]
+            },
+            "description": "El cliente y el equipo deben existir y corresponder entre sí. No puede existir otro turno activo en la misma fecha y hora.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"equipoId\": 101,\n  \"fecha\": \"2026-11-12\",\n  \"hora\": \"11:00\",\n  \"motivo\": \"Control general\",\n  \"procedencia\": \"Presencial\",\n  \"estado\": \"Solicitado\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 201 o error de validación/conflicto', function () { pm.expect(pm.response.code).to.be.oneOf([201,400,409]); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b=pm.response.json(); pm.expect(b).to.have.property('success'); pm.expect(b).to.have.property('data'); });",
+                  "if (pm.response.code === 201) { pm.collectionVariables.set('turno_nuevo_id', String(pm.response.json().data.id)); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar turno",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/turnos/{{turno_nuevo_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "turnos",
+                "{{turno_nuevo_id}}"
+              ]
+            },
+            "description": "Actualiza un turno y valida fecha, horario, relaciones y conflictos.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"equipoId\": 101,\n  \"fecha\": \"2026-11-12\",\n  \"hora\": \"11:30\",\n  \"motivo\": \"Control general actualizado\",\n  \"procedencia\": \"Presencial\",\n  \"estado\": \"Confirmado\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b).to.have.property('data'); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar estado del turno",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/turnos/{{turno_nuevo_id}}/estado",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "turnos",
+                "{{turno_nuevo_id}}",
+                "estado"
+              ]
+            },
+            "description": "Cambia únicamente el estado. Valores permitidos: Solicitado, Confirmado, Cancelado y Atendido.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"Atendido\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b).to.have.property('data'); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar turno",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/turnos/{{turno_nuevo_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "turnos",
+                "{{turno_nuevo_id}}"
+              ]
+            },
+            "description": "Elimina el turno indicado."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('El registro nuevo se elimina correctamente', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta de eliminación correcta', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Error - turno inexistente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/turnos/99999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "turnos",
+                "99999"
+              ]
+            },
+            "description": "Ejemplo de respuesta 404 para un ID inexistente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 404', function () { pm.response.to.have.status(404); });",
+                  "pm.test('La respuesta indica error', function () { const body = pm.response.json(); pm.expect(body.success).to.eql(false); pm.expect(body.data).to.eql(null); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "General",
+      "item": [
+        {
+          "name": "Estado de la API",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Comprueba que la API esté disponible."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Respuesta con formato estándar', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b).to.have.property('data'); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ruta inexistente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ruta-inexistente",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ruta-inexistente"
+              ]
+            },
+            "description": "Ejemplo de respuesta 404 del middleware de rutas inexistentes."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 404', function () { pm.response.to.have.status(404); });",
+                  "pm.test('La respuesta indica error', function () { const body = pm.response.json(); pm.expect(body.success).to.eql(false); pm.expect(body.data).to.eql(null); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear cliente - campos obligatorios",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clientes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            },
+            "description": "Debe responder 400 indicando los campos obligatorios.",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 400', function () { pm.response.to.have.status(400); });",
+                  "pm.test('Formato de error', function () { const b=pm.response.json(); pm.expect(b.success).to.eql(false); pm.expect(b.data).to.eql(null); pm.expect(b.message).to.be.a('string'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear cliente - email inválido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clientes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            },
+            "description": "Debe responder 400 cuando el correo no tiene un formato válido.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Pérez\",\n  \"telefono\": \"291 400-0000\",\n  \"email\": \"correo-invalido\",\n  \"localidad\": \"Bahía Blanca\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 400', function () { pm.response.to.have.status(400); });",
+                  "pm.test('Mensaje de validación', function () { pm.expect(pm.response.json().message).to.eql('Ingresá un correo electrónico válido.'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear equipo - cliente inexistente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/equipos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "equipos"
+              ]
+            },
+            "description": "Debe rechazar el alta cuando clienteId no corresponde a un cliente existente.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 99999,\n  \"tipo\": \"Taladro\",\n  \"marca\": \"Bosch\",\n  \"modelo\": \"GSB 13 RE\",\n  \"numeroSerie\": \"PRUEBA-CLI-999\",\n  \"estado\": \"Ingresado\",\n  \"garantia\": \"A verificar\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 400', function () { pm.response.to.have.status(400); });",
+                  "pm.test('No crea el equipo', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(false); pm.expect(b.data).to.eql(null); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear turno - equipo inexistente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/turnos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "turnos"
+              ]
+            },
+            "description": "Debe rechazar el turno cuando el equipo no existe.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"equipoId\": 99999,\n  \"fecha\": \"2026-11-12\",\n  \"hora\": \"10:00\",\n  \"motivo\": \"Prueba de validación\",\n  \"procedencia\": \"Web\",\n  \"estado\": \"Pendiente\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 400', function () { pm.response.to.have.status(400); });",
+                  "pm.test('No crea el turno', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(false); pm.expect(b.data).to.eql(null); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear reparación - equipo inexistente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reparaciones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reparaciones"
+              ]
+            },
+            "description": "Debe rechazar la reparación cuando el equipo no existe.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"equipoId\": 99999,\n  \"fechaIngreso\": \"2026-11-12\",\n  \"motivo\": \"Prueba de validación\",\n  \"estado\": \"Recibido\",\n  \"observaciones\": \"Equipo inexistente\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 400', function () { pm.response.to.have.status(400); });",
+                  "pm.test('No crea la reparación', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(false); pm.expect(b.data).to.eql(null); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear reparación - cliente inexistente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reparaciones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reparaciones"
+              ]
+            },
+            "description": "Debe rechazar la reparación cuando el cliente no existe.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 99999,\n  \"equipoId\": 101,\n  \"fechaIngreso\": \"2026-11-12\",\n  \"motivo\": \"Prueba de validación\",\n  \"estado\": \"Recibido\",\n  \"observaciones\": \"Cliente inexistente\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 400', function () { pm.response.to.have.status(400); });",
+                  "pm.test('No crea la reparación', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(false); pm.expect(b.data).to.eql(null); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear reparación - equipo de otro cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reparaciones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reparaciones"
+              ]
+            },
+            "description": "Debe rechazar la combinación cuando el equipo no pertenece al cliente indicado.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 2,\n  \"equipoId\": 101,\n  \"fechaIngreso\": \"2026-11-12\",\n  \"motivo\": \"Prueba de relación incorrecta\",\n  \"estado\": \"Recibido\",\n  \"observaciones\": \"El equipo 101 pertenece al cliente 1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 400', function () { pm.response.to.have.status(400); });",
+                  "pm.test('No crea la reparación', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(false); pm.expect(b.data).to.eql(null); pm.expect(b.message).to.eql('El equipo seleccionado no pertenece al cliente indicado.'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar cliente - tiene equipos asociados",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/clientes/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "1"
+              ]
+            },
+            "description": "Debe impedir eliminar un cliente que tenga equipos asociados."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 409 Conflict', function () { pm.response.to.have.status(409); });",
+                  "pm.test('No elimina el cliente', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(false); pm.expect(b.data).to.eql(null); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar equipo - tiene reparaciones asociadas",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/equipos/101",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "equipos",
+                "101"
+              ]
+            },
+            "description": "Debe impedir eliminar un equipo que tenga reparaciones asociadas."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 409 Conflict', function () { pm.response.to.have.status(409); });",
+                  "pm.test('No elimina el equipo', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(false); pm.expect(b.data).to.eql(null); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear cliente - teléfono inválido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clientes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            },
+            "description": "Debe rechazar teléfonos que no cumplen el formato y longitud requeridos.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Prueba\",\n  \"telefono\": \"123\",\n  \"email\": \"juan.prueba@example.com\",\n  \"localidad\": \"Bahía Blanca\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Devuelve 400', function () { pm.response.to.have.status(400); });",
+                  "pm.test('No crea el cliente', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(false); pm.expect(b.data).to.eql(null); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
