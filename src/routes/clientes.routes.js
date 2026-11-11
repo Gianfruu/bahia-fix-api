@@ -13,6 +13,13 @@ function validarEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
 
+function validarTelefono(telefono) {
+  const formatoValido = /^[0-9+()\s-]+$/.test(telefono.trim());
+  const cantidadDigitos = telefono.replace(/\D/g, "").length;
+
+  return formatoValido && cantidadDigitos >= 8 && cantidadDigitos <= 15;
+}
+
 // Obtener listado de clientes
 router.get("/", (req, res) => {
   const { page, limit } = parsePagination(req.query);
@@ -65,6 +72,14 @@ router.post("/", (req, res) => {
     });
   }
 
+  if (!validarTelefono(req.body.telefono)) {
+    return res.status(400).json({
+      success: false,
+      data: null,
+      message: "Ingresá un teléfono válido: solo números, espacios, +, guiones o paréntesis, con entre 8 y 15 dígitos."
+    });
+  }
+
   const cliente = {
     id: Math.max(0, ...clientes.map((item) => item.id)) + 1,
     ...Object.fromEntries(
@@ -112,6 +127,14 @@ router.put("/:id", (req, res) => {
       success: false,
       data: null,
       message: "Ingresá un correo electrónico válido."
+    });
+  }
+
+  if (!validarTelefono(req.body.telefono)) {
+    return res.status(400).json({
+      success: false,
+      data: null,
+      message: "Ingresá un teléfono válido: solo números, espacios, +, guiones o paréntesis, con entre 8 y 15 dígitos."
     });
   }
 

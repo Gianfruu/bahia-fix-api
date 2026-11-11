@@ -3,6 +3,7 @@ import { Router } from "express";
 import {
   clientes,
   equipos,
+  reparaciones,
   filterAndPaginate,
   parsePagination,
   validateEquipo
@@ -147,6 +148,18 @@ router.delete("/:id", (req, res) => {
       success: false,
       data: null,
       message: "No se encontró el equipo solicitado."
+    });
+  }
+
+  const reparacionesAsociadas = reparaciones.filter(
+    (item) => String(item.equipoId) === req.params.id
+  );
+
+  if (reparacionesAsociadas.length > 0) {
+    return res.status(409).json({
+      success: false,
+      data: null,
+      message: `No se puede eliminar el equipo porque todavía tiene ${reparacionesAsociadas.length} reparación(es) asociada(s). Eliminá primero esas reparaciones.`
     });
   }
 
