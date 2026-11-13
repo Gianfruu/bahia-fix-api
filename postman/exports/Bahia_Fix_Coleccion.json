@@ -635,7 +635,7 @@
             "description": "El cliente y el equipo deben existir y el equipo debe pertenecer al cliente.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"clienteId\": 1,\n  \"equipoId\": 101,\n  \"fechaIngreso\": \"2026-11-12\",\n  \"motivo\": \"El equipo requiere revisión\",\n  \"estado\": \"Recibido\",\n  \"observaciones\": \"Ingreso para diagnóstico\"\n}",
+              "raw": "{\n  \"clienteId\": 1,\n  \"equipoId\": 101,\n  \"fechaIngreso\": \"2026-11-13\",\n  \"motivo\": \"El equipo requiere revisión\",\n  \"estado\": \"Recibido\",\n  \"observaciones\": \"Ingreso para diagnóstico\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -649,9 +649,8 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('Devuelve 201 o error de validación', function () { pm.expect(pm.response.code).to.be.oneOf([201,400]); });",
-                  "pm.test('Respuesta con formato estándar', function () { const b=pm.response.json(); pm.expect(b).to.have.property('success'); pm.expect(b).to.have.property('data'); });",
-                  "if (pm.response.code === 201) { pm.collectionVariables.set('reparacion_nueva_id', String(pm.response.json().data.id)); }"
+                  "pm.test('Devuelve HTTP 201', function () { pm.response.to.have.status(201); });",
+                  "pm.test('Reparación creada correctamente', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b.data).to.be.an('object'); pm.expect(b.data).to.have.property('id'); pm.expect(b.message).to.be.a('string'); pm.collectionVariables.set('reparacion_nueva_id', String(b.data.id)); });"
                 ]
               }
             }
@@ -919,7 +918,7 @@
             "description": "El cliente y el equipo deben existir y corresponder entre sí. No puede existir otro turno activo en la misma fecha y hora.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"clienteId\": 1,\n  \"equipoId\": 101,\n  \"fecha\": \"2026-11-12\",\n  \"hora\": \"11:00\",\n  \"motivo\": \"Control general\",\n  \"procedencia\": \"Presencial\",\n  \"estado\": \"Solicitado\"\n}",
+              "raw": "{\n  \"clienteId\": 1,\n  \"equipoId\": 101,\n  \"fecha\": \"2026-11-20\",\n  \"hora\": \"11:00\",\n  \"motivo\": \"Control general\",\n  \"procedencia\": \"Presencial\",\n  \"estado\": \"Solicitado\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -933,9 +932,8 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('Devuelve 201 o error de validación/conflicto', function () { pm.expect(pm.response.code).to.be.oneOf([201,400,409]); });",
-                  "pm.test('Respuesta con formato estándar', function () { const b=pm.response.json(); pm.expect(b).to.have.property('success'); pm.expect(b).to.have.property('data'); });",
-                  "if (pm.response.code === 201) { pm.collectionVariables.set('turno_nuevo_id', String(pm.response.json().data.id)); }"
+                  "pm.test('Devuelve HTTP 201', function () { pm.response.to.have.status(201); });",
+                  "pm.test('Turno creado correctamente', function () { const b = pm.response.json(); pm.expect(b.success).to.eql(true); pm.expect(b.data).to.be.an('object'); pm.expect(b.data).to.have.property('id'); pm.expect(b.message).to.be.a('string'); pm.collectionVariables.set('turno_nuevo_id', String(b.data.id)); });"
                 ]
               }
             }
